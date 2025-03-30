@@ -30,9 +30,7 @@ export default function RootLayout() {
 
   return (
     <GlobalProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(root)" options={{ headerShown: false }} />
-      </Stack>
+      <Stack screenOptions={{ headerShown: false }} />
     </GlobalProvider>
   );
 }

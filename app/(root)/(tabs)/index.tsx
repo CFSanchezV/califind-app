@@ -10,7 +10,6 @@ export default function Home() {
 
   return (
   <SafeAreaView className="h-full bg-white">
-    <Search />
     <Link href="/sign-in"></Link>
     <Link href="/explore"></Link>
     <Link href="/profile"></Link>
