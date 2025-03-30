@@ -69,42 +69,42 @@ export const categories = [
 
 export const settings = [
   {
-    title: "My Bookings",
+    title: "Mis reservas",
     icon: icons.calendar,
   },
   {
-    title: "Payments",
+    title: "Pagos",
     icon: icons.wallet,
   },
   {
-    title: "Profile",
+    title: "Sobre mí",
     icon: icons.person,
   },
   {
-    title: "Notifications",
+    title: "Notificaciones",
     icon: icons.bell,
   },
   {
-    title: "Security",
+    title: "Seguridad",
     icon: icons.shield,
   },
   {
-    title: "Language",
+    title: "Idioma",
     icon: icons.language,
   },
   {
-    title: "Help Center",
+    title: "Centro de ayuda",
     icon: icons.info,
   },
   {
-    title: "Invite Friends",
+    title: "Invitar amigos",
     icon: icons.people,
   },
 ];
 
 export const facilities = [
   {
-    title: "Laundry",
+    title: "Lavandería",
     icon: icons.laundry,
   },
   {

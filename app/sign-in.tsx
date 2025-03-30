@@ -1,18 +1,24 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, Pressable, Alert } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Input } from '@rneui/themed';
-import React, { useState } from 'react';
-import { router } from 'expo-router';
+import React from 'react';
+import { Redirect, router } from 'expo-router';
+import { useGlobalContext } from '~/lib/global-provider';
+import { login } from '~/lib/appwrite';
+import icons from '~/constants/icons';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { refetch, loading, isLogged } = useGlobalContext();
 
-  async function signInWithEmail() {
-    setLoading(true);
-  }
+  if (!loading && isLogged) return <Redirect href="/" />;
 
+  const handleLogin = async () => {
+    const result = await login();
+    if (result) {
+      refetch();
+    } else {
+      Alert.alert("Error", "Failed to login");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -34,54 +40,22 @@ const SignIn = () => {
             <Text className="text-primary-300">donde y cuando quieras</Text>
           </Text>
 
-          <View className="mx-10 mt-10">
-            <Input
-              className="mx-2"
-              label="Email"
-              leftIcon={{ type: 'font-awesome', name: 'envelope' }}
-              value={email}
-              placeholder="email@dominio.com"
-              autoCapitalize={'none'}
-            />
-          </View>
-          <View className="mx-10">
-            <Input
-              className="mx-2"
-              label="Contraseña"
-              leftIcon={{ type: 'font-awesome', name: 'lock' }}              
-              value={password}
-              secureTextEntry={true}
-              placeholder="Contraseña"
-              autoCapitalize={'none'}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={() => signInWithEmail()}
-            disabled={loading}
-            className="mt-5 w-full rounded-full border bg-white py-4 shadow-md shadow-zinc-300">
-            <View className="flex flex-row items-center justify-center">
-              <Image
-                source={require('../assets/icons/register.png')}
-                className="h-6 w-6"
-                resizeMode="contain"
-              />
-              <Text className="ml-2 font-rubik-medium text-lg text-black-300">Ingresar</Text>
-            </View>
-          </TouchableOpacity>
+          <Text className="mt-20 text-center font-rubik text-lg text-black-200">
+            Ingresa a Califind con Google
+          </Text>
 
-          <TouchableOpacity
-            
-            disabled={loading}
-            className="mb-9 mt-5 w-full rounded-full border bg-gray-300 py-4 shadow-md shadow-zinc-300">
-            <View className="flex flex-row items-center justify-center">
-              <Image
-                source={require('../assets/icons/person.png')}
-                className="h-6 w-6"
-                resizeMode="contain"
-              />
-              <Text className="ml-2 font-rubik-medium text-lg text-black-300">Crea cuenta</Text>
-            </View>
-          </TouchableOpacity>
+          <View className="flex flex-row items-center justify-center">
+            <TouchableOpacity
+              onPress={handleLogin}
+              className="mt-5 w-[80%] rounded-full bg-white py-4 shadow-md shadow-zinc-900">
+              <View className="flex flex-row items-center justify-center">
+                <Image source={icons.google} className="h-5 w-5" resizeMode="contain" />
+                <Text className="ml-2 font-rubik-medium text-lg text-black-300">
+                  Continuar con Google
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

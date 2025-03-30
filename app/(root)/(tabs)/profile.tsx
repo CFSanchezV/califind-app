@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
-import React, { useEffect } from 'react';
+import { View, Text, ScrollView, Image, TouchableOpacity, ImageSourcePropType, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 import { settings } from 'constants/data';
 import icons from '~/constants/icons';
+import { useGlobalContext } from '~/lib/global-provider';
+import { logout } from '~/lib/appwrite';
 
 interface SettingsItemProp {
   icon: ImageSourcePropType;
@@ -25,11 +25,16 @@ const SettingsItem = ({ icon, title, onPress, textStyle, showArrow = true }: Set
 );
 
 const Profile = () => {
-  //const sessionData = useAuth(); // Call useAuth at the top level
-  let userProfileData;
+  const { user, refetch } = useGlobalContext();  
 
   const handleLogout = async () => {
-    //handle logout
+    const result = await logout();
+    if (result) {
+      Alert.alert("Exito", "Sesión cerrada con éxito");
+      refetch();
+    } else {
+      Alert.alert("Error", "Error al cerrar sesión");
+    }
   };
 
   
@@ -38,45 +43,45 @@ const Profile = () => {
     <SafeAreaView className="h-full bg-white">
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 32, paddingHorizontal: 7 }} // Updated from contentContainerClassName
+        contentContainerClassName="pb-32 px-7"
       >
-        <View className="mt-5 flex flex-row items-center justify-between">
-          <Text className="font-rubik-bold text-xl">Profile</Text>
-          <Image source={icons.bell} className="size-8" />
+        <View className="flex flex-row items-center justify-between mt-5">
+          <Text className="text-xl font-rubik-bold">Profile</Text>
+          <Image source={icons.bell} className="size-5" />
         </View>
 
-        <View className="mt-5 flex flex-row justify-center">
-          <View className="relative mt-5 flex flex-col items-center">
+        <View className="flex flex-row justify-center mt-5">
+          <View className="flex flex-col items-center relative mt-5">
             <Image
-              source={require('assets/images/avatar.png')}
-              className="relative size-44 rounded-full"
+              source={{ uri: user?.avatar }}
+              className="size-44 relative rounded-full"
             />
             <TouchableOpacity className="absolute bottom-11 right-2">
               <Image source={icons.edit} className="size-9" />
             </TouchableOpacity>
 
-            <Text className="mt-2 font-rubik-bold text-2xl">christian sanchez</Text>
+            <Text className="text-2xl font-rubik-bold mt-2">{user?.name}</Text>
           </View>
         </View>
 
-        <View className="mt-10 flex flex-col">
-          <SettingsItem icon={icons.calendar} title="My Bookings" />
-          <SettingsItem icon={icons.wallet} title="Payments" />
+        <View className="flex flex-col mt-10">
+          <SettingsItem icon={icons.calendar} title="Mis reservas" />
+          <SettingsItem icon={icons.wallet} title="Pagos" />
         </View>
 
-        <View className="mt-5 flex flex-col border-t border-primary-200 pt-5">
+        <View className="flex flex-col mt-5 border-t pt-5 border-primary-200">
           {settings.slice(2).map((item, index) => (
             <SettingsItem key={index} {...item} />
           ))}
         </View>
 
-        <View className="mt-5 flex flex-col border-t border-primary-200 pt-5">
+        <View className="flex flex-col border-t mt-5 pt-5 border-primary-200">
           <SettingsItem
             icon={icons.logout}
             title="Logout"
             textStyle="text-danger"
             showArrow={false}
-            onPress={handleLogout} // Fixed the onPress handler
+            onPress={handleLogout}
           />
         </View>
       </ScrollView>
